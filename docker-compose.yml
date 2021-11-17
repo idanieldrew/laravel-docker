@@ -4,9 +4,13 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    tty: true
     container_name: main-app
-    restart: always
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    networks:
+      - custom-network
   webserver:
     image: nginx
     container_name: nginx-webserver
@@ -14,6 +18,7 @@ services:
       - 8005:80
     volumes:
       - ./:/var/www
+      - ./Docker-compose/nginx:/etc/nginx/conf.d
     networks:
       - custom-network
   database:
